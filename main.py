@@ -1,31 +1,36 @@
 #!/usr/bin/env python3
-"""Sum up Tuesday 24 November 2026's world news in one image.
+"""Ship the entry image: copy entry.png into the output folder.
 
-The entry image is a newspaper-style front page, "THE WORLD IN ONE DAY",
-with 35 real stories from 24 November 2026. This program simply writes
-that image, stored beside it as entry.png, to the output location.
-It uses only the standard library and no network. Running it twice
-writes exactly the same bytes both times. If the image is missing,
-it exits with a clear error instead of a traceback.
+The image sits next to this program. This script places a copy of it
+where the harness expects it: the folder named by MAKEFUN_OUTPUT_DIR
+when that is set, otherwise /output.
 """
 
 import os
 import shutil
+import sys
+from pathlib import Path
 
-# The image lives in the repository next to this program; the harness
-# runs the program with the repository present, so resolve it from
-# this file's own directory rather than from the working directory.
-HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(HERE, "entry.png")
-OUT_DIR = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
-DST = os.path.join(OUT_DIR, "entry.png")
+IMAGE_NAME = "entry.png"
 
-os.makedirs(OUT_DIR, exist_ok=True)
 
-# Fail fast with a clear message if the image is missing, instead of
-# crashing with a traceback from the copy below.
-if not os.path.isfile(SRC):
-    raise SystemExit("entry image not found: %s" % SRC)
+def output_dir():
+    return Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
 
-shutil.copyfile(SRC, DST)
-print("wrote %s %d bytes" % (DST, os.path.getsize(DST)))
+
+def main():
+    here = Path(__file__).resolve().parent
+    source = here / IMAGE_NAME
+    # Stop early with a plain message when the image is absent, instead
+    # of failing halfway through the copy below.
+    if not source.is_file():
+        sys.exit(f"missing entry image: {source}")
+    target_dir = output_dir()
+    target_dir.mkdir(parents=True, exist_ok=True)
+    target = target_dir / IMAGE_NAME
+    shutil.copyfile(source, target)
+    print(f"wrote {target} ({target.stat().st_size} bytes)")
+
+
+if __name__ == "__main__":
+    main()

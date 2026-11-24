@@ -16,14 +16,20 @@ Asian stocks rallying on Jensen Huang's return to Nvidia, the EU unveiling
 fresh Russia sanctions, Trump pausing the Iowa explosives blast, and a
 "The day in numbers" panel drawn from the same stories.
 
-Every run produces the same output with no network access: the program
-simply takes the `entry.png` file sitting next to it and places a copy
-at `/output/entry.png`. Run it once or a hundred times and the bytes
-come out identical.
+The output never varies: with no network involved, the program only
+copies the `entry.png` beside it into `/output/entry.png`, so whether
+it runs once or a hundred times, the bytes that land there are always
+the same.
+
+The page itself is a dense newspaper front page for Tuesday 24 November
+2026: a masthead, two lead stories, and 35 real stories from that day
+grouped into seven sections, from the war in Ukraine and the Gulf to
+markets, tech, and sport, plus a "day in numbers" panel drawn from the
+same stories.
 
 If `entry.png` is missing, the program does not crash with a traceback:
-it checks for the file first and exits with a clear "entry image not found"
-error naming the missing path. That way a failed run says plainly what
+it checks for the file first and exits with a clear "missing entry image"
+message naming the missing path. That way a failed run says plainly what
 went wrong instead of dumping a stack trace.
 
 ## Run it
